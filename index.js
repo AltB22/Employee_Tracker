@@ -1,6 +1,6 @@
 const mysql = require('mysql2');
 const inquirer = require('inquirer');
-const consoleTable = require('console.table')
+require('console.table')
 
 
 // Connect to database
@@ -73,7 +73,7 @@ function showAllDepartments(){
 }
 
 function viewAllRoles(){
-    let query = 'SELECT * from roles';
+    let query = 'SELECT * from role';//look at join statments
     db.query(query, function(err, res){
         if(err)throw err;
         console.table('Roles', res);
@@ -82,7 +82,7 @@ function viewAllRoles(){
 }
 
 function viewAllEmployees(){
-    let query = 'SELECT * from employees';
+    let query = 'SELECT * from employee';//look at join statments
     db.query(query, function(err, res){
         if(err)throw err;
         console.table('Employees', res);
@@ -99,12 +99,12 @@ function  addDepartment(){
         }
     ).then((answer)=>{
         db.query(
-            'INSERT INTO department_name SET ?',
+            'INSERT INTO department_name',
             {
                 name: answer.newDepartment
             });
-
+            menu();
         });
-        menu();
+        
     };
 
