@@ -72,4 +72,39 @@ function showAllDepartments(){
     })
 }
 
+function viewAllRoles(){
+    let query = 'SELECT * from roles';
+    db.query(query, function(err, res){
+        if(err)throw err;
+        console.table('Roles', res);
+        menu();
+    })
+}
+
+function viewAllEmployees(){
+    let query = 'SELECT * from employees';
+    db.query(query, function(err, res){
+        if(err)throw err;
+        console.table('Employees', res);
+        menu();
+    })
+}
+
+function  addDepartment(){
+    inquirer.prompt(
+        {
+            type: 'input',
+            name: 'newDepartment',
+            message: "Please enter the department you would you like to add."
+        }
+    ).then((answer)=>{
+        db.query(
+            'INSERT INTO department_name SET ?',
+            {
+                name: answer.newDepartment
+            });
+
+        });
+        menu();
+    };
 
