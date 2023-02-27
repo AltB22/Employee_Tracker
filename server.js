@@ -13,11 +13,21 @@ const PORT = process.env.PORT || 3001;
 const db = mysql.createConnection(
   {
     host: 'localhost',
- 
     user: 'root',
-
     password: 'PASSWORD',
     database: 'employee_db'
   },
   console.log(`Connected to the employee_db database.`)
 );
+
+db.query('SELECT * FROM employees', function (err, results) {
+    console.log(results);
+});
+
+app.use((req, res) => {
+    res.status(404).end();
+});
+
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});
