@@ -211,12 +211,13 @@ function deleteEmployee() {
                     choices: res.map((employee) => ({ name: employee.name, value: employee.id }))
                 }
             ).then((answer) => {
-                console.log(`Employee ${answer.employeeName} has been deleted}`);
-                    console.table('Employees:', res);
+
+
 
                 db.query('DELETE FROM employee WHERE id = ?', [answer.employeeName], (err) => {
                     if (err) throw err;
-                    
+                    console.log(`Employee ${answer.employeeName} has been deleted}`);
+                    // console.table('Employees:', res);
                 });
             });
         });
@@ -224,52 +225,41 @@ function deleteEmployee() {
 
 
 function addEmployeeRole() {
-    inquirer.prompt([
-        {
-            type: 'input',
-            name: 'newEmployeeRoleId',
-            message: "Please enter the employee's ID."
-        },
-        {
-            type: 'input',
-            name: 'newEmployeeName',
-            message: "Please enter the new employee's first name."
-        },
-        {
-            type: 'input',
-            name: 'newEmployeeLastName',
-            message: "Please enter the new employee's last name."
-        },
-        {
-            type: 'input',
-            name: 'newEmployeeRole',
-            message: "Please enter the the role id for the new employee you would you like to add."
-        },
-        {
-            type: 'input',
-            name: 'newEmployeeManager',
-            message: "Please enter the manager id for the new employee you would like to add."
-        },
-    ]).then((answer) => {
-        db.query(
-            'INSERT INTO employee SET ?',
-            {
-                id: answer.newEmployeeRoleId,
-                first_name: answer.newEmployeeName,
-                last_name: answer.newEmployeeLastName,
-                role_id: answer.newEmployeeRole,
-                manager_id: answer.newEmployeeManager,
-            });
-        let query = 'SELECT * FROM employee';
-        db.query(query, function (err, res) {
+    db.query('SELECT id, CONCAT(first_name, " ", last_name) AS name from employee',
+        (err, res) => {
             if (err) throw err;
-            console.log('New role has been successfully added');
-            console.table('Employees:', res);
-            menu();
-        })
 
-    });
+            inquirer.prompt([
+                {
+                    type: 'list',
+                    name: 'employeeName',
+                    message: 'Which employee would you like to update the role for?',
+                    choices: res.map((employee) => ({ name: employee.name, value: employee.id }))
+                },
+                {
+                    type: 'input',
+                    name: 'newEmployeeRole',
+                    message: 'Please enter the role to be updated for this employee.',
+                }
 
+            ]).then((answer) => {
+                db.query(
+                    'INSERT INTO employee SET ?',
+                    {
+                        // id: answer.newEmployeeRoleId,
+                        role_id: answer.newEmployeeRole,
+                    });
+                let query = 'SELECT * FROM employee';
+                db.query(query, function (err, res) {
+                    if (err) throw err;
+                    console.log('New role has been successfully added');
+                    console.table('Employees:', res);
+                    menu();
+                })
+
+            });
+
+        });
 };
 
 function quitApp() {
