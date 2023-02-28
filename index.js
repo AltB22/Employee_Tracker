@@ -139,13 +139,15 @@ function addRole() {
         db.query(
             'INSERT INTO role SET ?',
             {
-                name: answer.newDepartment
+                title: answer.newRole,
+                salary: answer.newRoleSalary,
+                department_id: answer.newRoleDept,
             });
-        let query = 'SELECT * FROM department';
+        let query = 'SELECT * FROM role';
         db.query(query, function (err, res) {
             if (err) throw err;
-            console.log('New department has been successfully added');
-            console.table('Departments:', res);
+            console.log('New role has been successfully added');
+            console.table('Roles:', res);
             menu();
         })
 
