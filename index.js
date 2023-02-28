@@ -29,7 +29,7 @@ function menu() {
             type: "list",
             name: "options",
             message: "Which option would you like to select",
-            choices: ["view all departments", "view all roles", "view all employees", "add a department", "add a role", "add an employee", "add an employee role"]
+            choices: ["view all departments", "view all roles", "view all employees", "add a department", "add a role", "add an employee", "add an employee role", "Quit"]
         }).then((answer)=>{
             switch(answer.options){
                 case "view all departments":
@@ -74,7 +74,8 @@ function showAllDepartments(){
 
 function viewAllRoles(){
     // let query = 'SELECT * from role';
-    let query = 'SELECT role.title, role.id, role.salary FROM role LEFT JOIN department ON role.department_id = department.id'
+    let query = 'SELECT role.title, role.id AS role_id, department.name AS department_name, role.salary FROM role JOIN department ON role.department_id = department.id'
+
 
 
 
@@ -94,7 +95,7 @@ function viewAllEmployees(){
     })
 }
 
-function  addDepartment(){
+function addDepartment(){
     inquirer.prompt(
         {
             type: 'input',
