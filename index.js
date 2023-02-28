@@ -46,7 +46,7 @@ function menu() {
                     addDepartment();
                     break;
                 case "add a role":
-                    AddRole();
+                    addRole();
                     break;
                 case "add an employee":
                     addEmployee();
@@ -118,3 +118,37 @@ function addDepartment() {
 
 };
 
+function addRole() {
+    inquirer.prompt([
+        {
+            type: 'input',
+            name: 'newRole',
+            message: "Please enter the role you would you like to add."
+        },
+        {
+            type: 'input',
+            name: 'newRoleSalary',
+            message: "Please enter the salary for the role you would you like to add."
+        },
+        {
+            type: 'input',
+            name: 'newRoleDept',
+            message: "Please enter the department of the role you would you like to add."
+        },
+    ]).then((answer) => {
+        db.query(
+            'INSERT INTO role SET ?',
+            {
+                name: answer.newDepartment
+            });
+        let query = 'SELECT * FROM department';
+        db.query(query, function (err, res) {
+            if (err) throw err;
+            console.log('New department has been successfully added');
+            console.table('Departments:', res);
+            menu();
+        })
+
+    });
+
+}
