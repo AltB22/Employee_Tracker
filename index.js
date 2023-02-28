@@ -74,7 +74,7 @@ function showAllDepartments(){
 
 function viewAllRoles(){
     // let query = 'SELECT * from role';
-    let query = 'SELECT role.title, role.id, role.salary FROM role LEFT JOIN role ON role.department_id = department.id'
+    let query = 'SELECT role.title, role.id, role.salary FROM role LEFT JOIN department ON role.department_id = department.id'
 
 
 
