@@ -73,7 +73,11 @@ function showAllDepartments(){
 }
 
 function viewAllRoles(){
-    let query = 'SELECT * from role';//look at join statments
+    // let query = 'SELECT * from role';
+    let query = 'SELECT role.title, role.id, role.salary FROM role LEFT JOIN role ON role.department_id = department.id'
+
+
+
     db.query(query, function(err, res){
         if(err)throw err;
         console.table('Roles', res);
@@ -99,9 +103,9 @@ function  addDepartment(){
         }
     ).then((answer)=>{
         db.query(
-            'INSERT INTO department_name',
+            'INSERT INTO department',
             {
-                name: answer.newDepartment
+                name: answer.newDepartment,
             });
             menu();
         });
