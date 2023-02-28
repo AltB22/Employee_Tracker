@@ -52,7 +52,7 @@ function menu() {
                     addEmployee();
                     break;
                 case "add an employee role":
-                    addEmployeeRole();
+                    employeeRoleMenu();
                     break;
                 case "Quit":
                     quitApp();
@@ -198,3 +198,85 @@ function addEmployee() {
 
 }
 
+function addEmployeeRole() {
+    inquirer.prompt([
+        {
+            type: 'input',
+            name: 'newEmployeeRole',
+            message: "Please enter the new employee's first name."
+        },
+        {
+            type: 'input',
+            name: 'newEmployeeLastName',
+            message: "Please enter the new employee's last name."
+        },
+        {
+            type: 'input',
+            name: 'newEmployeeRole',
+            message: "Please enter the the role id for the new employee you would you like to add."
+        },
+        {
+            type: 'input',
+            name: 'newEmployeeManager',
+            message: "Please enter the manager id for the new employee you would like to add."
+        },
+    ]).then((answer) => {
+        db.query(
+            'INSERT INTO employee SET ?',
+            {
+                first_name: answer.newEmployeeFirstName,
+                last_name: answer.newEmployeeLastName,
+                role_id: answer.newEmployeeRole,
+                manager_id: answer.newEmployeeManager,
+            });
+        let query = 'SELECT * FROM employee';
+        db.query(query, function (err, res) {
+            if (err) throw err;
+            console.log('New role has been successfully added');
+            console.table('Employees:', res);
+            menu();
+        })
+
+    });
+
+}
+
+function employeeRoleMenu() {
+    inquirer.prompt(
+        {
+            type: "list",
+            name: "employeeList",
+            message: "Which employee would you like to add a role for?",
+            choices: ['SELECT * FROM employee']
+        }).then((answer) => {
+            switch (answer.options) {
+                case "view all departments":
+                    showAllDepartments();
+                    console.log('hello');
+                    break;
+                case "view all roles":
+                    viewAllRoles();
+                    break;
+                case "view all employees":
+                    viewAllEmployees();
+                    break;
+                case "add a department":
+                    addDepartment();
+                    break;
+                case "add a role":
+                    addRole();
+                    break;
+                case "add an employee":
+                    addEmployee();
+                    break;
+                case "add an employee role":
+                    addEmployeeRole();
+                    break;
+                case "Quit":
+                    quitApp();
+                    break;
+                default:
+                    quitApp();
+            }
+        })
+    }
