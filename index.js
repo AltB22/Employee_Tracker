@@ -29,7 +29,7 @@ function menu() {
             type: "list",
             name: "options",
             message: "Which option would you like to select",
-            choices: ["view all departments", "view all roles", "view all employees", "add a department", "add a role", "add an employee", "add an employee role", "Quit"]
+            choices: ["view all departments", "view all roles", "view all employees", "add a department", "add a role", "add an employee", "delete an employee", "add an employee role", "Quit"]
         }).then((answer) => {
             switch (answer.options) {
                 case "view all departments":
@@ -51,8 +51,11 @@ function menu() {
                 case "add an employee":
                     addEmployee();
                     break;
+                case "delete an employee":
+                    deleteEmployee();
+                    break;
                 case "add an employee role":
-                    employeeRoleMenu();
+                    addEmployeeRole();
                     break;
                 case "Quit":
                     quitApp();
@@ -196,7 +199,32 @@ function addEmployee() {
 
     });
 
-}
+};
+
+function deleteEmployee() {
+    db.query('SELECT id, CONCAT(first_name, " ", last_name) AS name from employee',
+        (err, res) => {
+            if (err) throw err;
+
+            inquirer.prompt(
+                {
+                    type: 'list',
+                    name: 'employeeName',
+                    message: 'Which employee would you like to delete?',
+                    choices: res.map((employee) => ({ name: employee.name, value: employee.id }))
+                }
+            ).then((answer) => {
+                console.log(`Employee ${answer.employeeName} has been deleted}`);
+                    console.table('Employees:', res);
+
+                db.query('DELETE FROM employee WHERE id = ?', [answer.employeeName], (err) => {
+                    if (err) throw err;
+                    
+                });
+            });
+        });
+};
+
 
 function addEmployeeRole() {
     inquirer.prompt([
@@ -239,44 +267,9 @@ function addEmployeeRole() {
 
     });
 
-}
+};
 
-function employeeRoleMenu() {
-    inquirer.prompt(
-        {
-            type: "list",
-            name: "employeeList",
-            message: "Which employee would you like to add a role for?",
-            choices: ['SELECT * FROM employee']
-        }).then((answer) => {
-            switch (answer.options) {
-                case "view all departments":
-                    showAllDepartments();
-                    console.log('hello');
-                    break;
-                case "view all roles":
-                    viewAllRoles();
-                    break;
-                case "view all employees":
-                    viewAllEmployees();
-                    break;
-                case "add a department":
-                    addDepartment();
-                    break;
-                case "add a role":
-                    addRole();
-                    break;
-                case "add an employee":
-                    addEmployee();
-                    break;
-                case "add an employee role":
-                    addEmployeeRole();
-                    break;
-                case "Quit":
-                    quitApp();
-                    break;
-                default:
-                    quitApp();
-            }
-        })
-    }
+function quitApp() {
+    db.end();
+    console.log("Good-Bye");
+};
