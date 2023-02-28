@@ -19,9 +19,6 @@ db.connect(function (err) {
     menu();
 }
 )
-// db.query('SELECT * FROM employees', function (err, results) {
-//     console.log(results);
-// });
 
 function menu() {
     inquirer.prompt(
@@ -230,7 +227,12 @@ function addEmployeeRole() {
     inquirer.prompt([
         {
             type: 'input',
-            name: 'newEmployeeRole',
+            name: 'newEmployeeRoleId',
+            message: "Please enter the employee's ID."
+        },
+        {
+            type: 'input',
+            name: 'newEmployeeName',
             message: "Please enter the new employee's first name."
         },
         {
@@ -252,7 +254,8 @@ function addEmployeeRole() {
         db.query(
             'INSERT INTO employee SET ?',
             {
-                first_name: answer.newEmployeeFirstName,
+                id: answer.newEmployeeRoleId,
+                first_name: answer.newEmployeeName,
                 last_name: answer.newEmployeeLastName,
                 role_id: answer.newEmployeeRole,
                 manager_id: answer.newEmployeeManager,
