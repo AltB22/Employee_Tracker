@@ -18,7 +18,7 @@
 
   ## Link to Video Demo
 
-  https://bootcampspot.instructuremedia.com/embed/d748f2a4-3e24-4e87-bd93-c929b3f7493c
+  https://bootcampspot.instructuremedia.com/embed/ad0a03f3-df9e-444a-b5bc-26407ad56041
 
   ## Installation
   - In order to run the app, installation of node.js version 16 or higher is required on the user's device.  In addition, inquirer.js (https://www.npmjs.com/package/inquirer/v/8.2.4) is required to be installed in the parent directory as well as mySQL2 and consoleTable.  The user should run following commands in sequence to ensure proper packet installation: npm init -y followed by npm install.
