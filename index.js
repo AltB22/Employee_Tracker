@@ -1,6 +1,6 @@
 const mysql = require('mysql2');
 const inquirer = require('inquirer');
-const consoleTable = require('console.table')
+const consoleTable = require('console.table');
 
 
 // Connect to database
@@ -11,14 +11,13 @@ const db = mysql.createConnection(
         password: 'PASSWORD',
         database: 'employee_db'
     },
-    console.log(`Connected to the employee_db database.`)
+    console.log('Connected to the employee_db database.')
 );
 
 db.connect(function (err) {
     if (err) throw err;
     menu();
-}
-)
+});
 
 function menu() {
     inquirer.prompt(
@@ -59,9 +58,9 @@ function menu() {
                     break;
                 default:
                     quitApp();
-            }
-        })
-}
+            };
+        });
+};
 
 function showAllDepartments() {
     let query = 'SELECT * from department';
@@ -69,8 +68,8 @@ function showAllDepartments() {
         if (err) throw err;
         console.table('Departments', res);
         menu();
-    })
-}
+    });
+};
 
 function viewAllRoles() {
     // let query = 'SELECT * from role';
@@ -80,8 +79,8 @@ function viewAllRoles() {
         if (err) throw err;
         console.table('Roles', res);
         menu();
-    })
-}
+    });
+};
 
 function viewAllEmployees() {
     let query = 'SELECT employee.id AS employee_id, employee.first_name, employee.last_name, role.title AS job_title, department.name AS department_name, role.salary, CONCAT(manager.first_name, " ", manager.last_name) AS manager_name FROM employee employee JOIN role role ON employee.role_id = role.id JOIN department department ON role.department_id = department.id LEFT JOIN employee manager ON employee.manager_id = manager.id;'
@@ -90,8 +89,8 @@ function viewAllEmployees() {
         if (err) throw err;
         console.table('Employees', res);
         menu();
-    })
-}
+    });
+};
 
 function addDepartment() {
     inquirer.prompt(
@@ -110,7 +109,7 @@ function addDepartment() {
         db.query(query, function (err, res) {
             if (err) throw err;
             console.log('New department has been successfully added');
-            console.table('Departments:', res);
+            // console.table('Departments:', res);
             menu();
         })
 
@@ -218,6 +217,7 @@ function deleteEmployee() {
                     if (err) throw err;
                     console.log(`Employee ${answer.employeeName} has been deleted}`);
                     // console.table('Employees:', res);
+                    menu();
                 });
             });
         });
@@ -239,28 +239,26 @@ function addEmployeeRole() {
                 {
                     type: 'input',
                     name: 'newEmployeeRole',
-                    message: 'Please enter the role to be updated for this employee.',
+                    message: "Please enter the role id of the employee's new role.",
                 }
-
             ]).then((answer) => {
+                let employeeId = answer.employeeName;
+                let newRoleId = answer.newEmployeeRole;
+
                 db.query(
-                    'INSERT INTO employee SET ?',
-                    {
-                        // id: answer.newEmployeeRoleId,
-                        role_id: answer.newEmployeeRole,
+                    'UPDATE employee SET role_id = ? WHERE id = ?',
+
+                    [newRoleId, employeeId],
+                    (err, res) => {
+                        if (err) throw err;
+                        console.log('New role has been successfully added');
+                        // console.table('Employees:', res);
+                        menu();
                     });
-                let query = 'SELECT * FROM employee';
-                db.query(query, function (err, res) {
-                    if (err) throw err;
-                    console.log('New role has been successfully added');
-                    console.table('Employees:', res);
-                    menu();
-                })
-
             });
-
         });
 };
+
 
 function quitApp() {
     db.end();
